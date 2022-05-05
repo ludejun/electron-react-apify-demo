@@ -34,6 +34,7 @@ const Hello = () => {
             Donate
           </button>
         </a>
+        <button onClick={() => window.electron.ipcRenderer.publish({url: 'https://www.github.com/login'})}>发布</button>
       </div>
     </div>
   );

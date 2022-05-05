@@ -12,6 +12,8 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import pie from 'puppeteer-in-electron';
+import puppeteer from 'puppeteer-core';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -29,6 +31,39 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('publish-start', async (event, arg) => {
+  console.log(event, arg);
+  const { url } = arg || {};
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents); // 当前的窗口
+
+  const browser = await pie.connect(app, puppeteer);
+
+  const window = new BrowserWindow({
+    show: true,
+    width: 1024,
+    height: 728,
+  });
+  // const url = 'https://www.baidu.com/';
+  await window.loadURL(url);
+  const contents = window.webContents;
+  console.log(contents.getUserAgent());
+  // TODO 最好替换掉Electron/18.0.3之类的标识
+
+  const page = await pie.getPage(browser, window);
+  console.log(page.url());
+  await page.focus('#login_field');
+  await page.keyboard.sendCharacter('ludejun07@gmail.com');
+  await page.focus('#password');
+  await page.keyboard.sendCharacter('ludejun05202415');
+  await Promise.all([
+    page.waitForNavigation(), // The promise resolves after navigation has finished
+    page.click('input[type=submit]'),
+  ]);
+  console.log('登录成功');
+  // window.destroy();
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -73,6 +108,7 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    center:true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -112,26 +148,31 @@ const createWindow = async () => {
   new AppUpdater();
 };
 
+(async () => {
+  await pie.initialize(app);
+
+  app
+    .whenReady()
+    .then(() => {
+      createWindow();
+      app.on('activate', () => {
+        // On macOS it's common to re-create a window in the app when the
+        // dock icon is clicked and there are no other windows open.
+        if (mainWindow === null) createWindow();
+      });
+    })
+    .catch(console.log);
+
+  app.on('window-all-closed', () => {
+    // Respect the OSX convention of having the application in memory even
+    // after all windows have been closed
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+
+
+})();
 /**
  * Add event listeners...
  */
-
-app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-app
-  .whenReady()
-  .then(() => {
-    createWindow();
-    app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
-    });
-  })
-  .catch(console.log);
