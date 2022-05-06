@@ -55,7 +55,10 @@ const configuration: webpack.Configuration = {
   output: {
     path: webpackPaths.distRendererPath,
     publicPath: '/',
-    filename: 'renderer.dev.js',
+    // 为了防止静态资源被缓存，将打包输出加入 文件内容hash（chunkhash）的标示
+    filename: '[name].[contenthash].js',
+    // 如有使用import()动态加载的代码打包
+    chunkFilename: '[name].bundle.js',
     library: {
       type: 'umd',
     },
@@ -64,7 +67,7 @@ const configuration: webpack.Configuration = {
   module: {
     rules: [
       {
-        test: /\.s?css$/,
+        test: /\.l?(e|c)ss$/,
         use: [
           'style-loader',
           {
@@ -75,14 +78,14 @@ const configuration: webpack.Configuration = {
               importLoaders: 1,
             },
           },
-          'sass-loader',
+          'less-loader',
         ],
-        include: /\.module\.s?(c|a)ss$/,
+        include: /\.module\.l?(e|c)ss$/,
       },
       {
-        test: /\.s?css$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
-        exclude: /\.module\.s?(c|a)ss$/,
+        test: /\.l?(e|c)ss$/,
+        use: ['style-loader', 'css-loader', 'less-loader'],
+        exclude: /\.module\.l?(e|c)ss$/,
       },
       // Fonts
       {
@@ -139,7 +142,8 @@ const configuration: webpack.Configuration = {
         removeAttributeQuotes: true,
         removeComments: true,
       },
-      isBrowser: false,
+      // isBrowser: false, // ?无此option
+      inject: 'body',
       env: process.env.NODE_ENV,
       isDevelopment: process.env.NODE_ENV !== 'production',
       nodeModules: webpackPaths.appNodeModulesPath,
