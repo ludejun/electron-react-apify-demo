@@ -57,7 +57,7 @@ ipcMain.on('publish-start', async (event, arg) => {
   await page.focus('#login_field');
   await page.keyboard.sendCharacter('ludejun07@gmail.com');
   await page.focus('#password');
-  await page.keyboard.sendCharacter('ludejun05202415');
+  await page.keyboard.sendCharacter('******'); // 更改密码
   await Promise.all([
     page.waitForNavigation(), // The promise resolves after navigation has finished
     page.click('input[type=submit]'),
