@@ -1,3 +1,5 @@
+#### Electron集成puppeteer的Demo，深化打包CI，能打出各平台的包，能真实运行。.npmrc中有打包中需要使用的中国代理，不需要的可以去掉。
+
 <img src=".erb/img/erb-banner.svg" width="100%" />
 
 <br>
