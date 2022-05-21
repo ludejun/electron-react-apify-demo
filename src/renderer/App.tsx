@@ -1,8 +1,41 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.less';
+import { publish } from '../publish/github/web';
+import { useState } from 'react';
 
 const Hello = () => {
+  const [pc, setProcess] = useState(0);
+  const [msg, setMsg] = useState<string>('');
+
+  const onClick = () => {
+    console.log(window, publish);
+    if (window.electron) {
+      window.electron.ipcRenderer.publish({
+        url: 'https://www.github.com/login',
+      });
+    } else {
+      publish(
+        {
+          form: {
+            accessToken: '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',
+            // owner: 'ludejun',
+            repo: 'CHENJI',
+            keepPath: true,
+          },
+          note: {},
+        },
+        (process, message) => {
+          setProcess(process);
+          setMsg(message);
+        },
+        (type, message, help) => {
+          setProcess(100);
+          setMsg(message);
+        }
+      );
+    }
+  };
   return (
     <div>
       <div className="Hello">
@@ -34,17 +67,12 @@ const Hello = () => {
             Donate
           </button>
         </a>
-        <button
-          type="button"
-          onClick={() =>
-            window.electron.ipcRenderer.publish({
-              url: 'https://www.github.com/login',
-            })
-          }
-        >
+        <button type="button" onClick={onClick}>
           发布
         </button>
       </div>
+      <p>进度：{pc}</p>
+      <p>说明：{msg}</p>
     </div>
   );
 };

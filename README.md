@@ -1,5 +1,14 @@
 #### Electron集成puppeteer的Demo，深化打包CI，能打出各平台的包，能真实运行。.npmrc中有打包中需要使用的中国代理，不需要的可以去掉。
 
+开发启动： npm start
+
+会把Electron环境启动起来；如果是想开发纯Web的内容，可以在浏览器端打开 http://localhost:1212/ 即为配套开发Web版
+
+打包：npm run package
+
+
+
+
 <img src=".erb/img/erb-banner.svg" width="100%" />
 
 <br>
