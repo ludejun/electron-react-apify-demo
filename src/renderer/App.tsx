@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.less';
 import { publish } from '../publish/github/web';
-import { useState } from 'react';
 
 const Hello = () => {
   const [pc, setProcess] = useState(0);

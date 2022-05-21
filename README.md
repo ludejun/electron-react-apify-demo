@@ -7,7 +7,32 @@
 打包：npm run package
 
 
+# electron中不能直接使用puppeteer #
+electron中不能直接使用puppeteer，首先了解什么是puppeteer vs puppeteer-core：https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#puppeteer-vs-puppeteer-core，简单就是core是puppeteer去除浏览器相关的代码。那electron中有内置浏览器，puppeteer能直接使用吗？还是可以的，实现原理可以参考这个回答：https://stackoverflow.com/questions/58213258/how-to-use-puppeteer-core-with-electron。这个回答上也告诉我们，puppeteer通过桥接使用electron的BrowserWindow，核心原理是：Both solution above uses **webSocketDebuggerUrl** to resolve the issue.
 
+比较流行的使用：`puppeteer-in-electron`https://www.npmjs.com/package/puppeteer-in-electron
+
+​		有下面两个问题：
+
+​		1）electron中的浏览器会比puppeteer自带的Chromium小很多，相对应的功能也少一点，不是所有的puppeteer的API都能使用，听说是大部分简单操作是没问题的。
+
+​		2）这个SDK的使用文档很少，特别是接入electron测试了很久，通过搜索别人怎么使用的摸索出来，代码如下（详见main.ts）：
+
+遇到的两个错误：
+
+> UnhandledPromiseRejectionWarning: Error: Must be called at startup before the electron app is ready.
+
+> UnhandledPromiseRejectionWarning: Error: The electron application was not setup to listen on a port. Was `initialize` called at startup?
+
+～
+
+～
+
+下面为原来electron-react-boilerplate/electron-react-boilerplate 的readme
+
+～
+
+～
 
 <img src=".erb/img/erb-banner.svg" width="100%" />
 
