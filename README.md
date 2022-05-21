@@ -8,7 +8,7 @@
 
 
 # electron中不能直接使用puppeteer #
-electron中不能直接使用puppeteer，首先了解什么是puppeteer vs puppeteer-core：https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#puppeteer-vs-puppeteer-core，简单就是core是puppeteer去除浏览器相关的代码。那electron中有内置浏览器，puppeteer能直接使用吗？还是可以的，实现原理可以参考这个回答：https://stackoverflow.com/questions/58213258/how-to-use-puppeteer-core-with-electron。这个回答上也告诉我们，puppeteer通过桥接使用electron的BrowserWindow，核心原理是：Both solution above uses **webSocketDebuggerUrl** to resolve the issue.
+electron中不能直接使用puppeteer，首先了解什么是puppeteer vs puppeteer-core：https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#puppeteer-vs-puppeteer-core ，简单就是core是puppeteer去除浏览器相关的代码。那electron中有内置浏览器，puppeteer能直接使用吗？还是可以的，实现原理可以参考这个回答：https://stackoverflow.com/questions/58213258/how-to-use-puppeteer-core-with-electron 。这个回答上也告诉我们，puppeteer通过桥接使用electron的BrowserWindow，核心原理是：Both solution above uses **webSocketDebuggerUrl** to resolve the issue.
 
 比较流行的使用：`puppeteer-in-electron`https://www.npmjs.com/package/puppeteer-in-electron
 
